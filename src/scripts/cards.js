@@ -11,7 +11,7 @@ function createCard (name, imageSource, handler, likeHandler, imageEvent) {
   const cardImage = cardElement.querySelector('.card__image');
   cardImage.src = imageSource;
   cardImage.alt =  `Изображение места: ${name}`;
-  cardImage.addEventListener('click', () => imageEvent(cardElement));
+  cardImage.addEventListener('click', () => imageEvent(name, imageSource));
   cardElement.querySelector('.card__delete-button').addEventListener('click', () => handler(cardElement));
   cardElement.querySelector('.card__like-button').addEventListener('click', () => likeHandler(cardElement));
   return cardElement;

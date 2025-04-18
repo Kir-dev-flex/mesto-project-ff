@@ -11,7 +11,7 @@ const profileDescription = document.querySelector('.profile__description');
 
 // Вывожу начальные карточки на страницу
 initialCards.forEach(function (item) {
-  cardList.append(createCard(item.name, item.link, deleteCard, cardLike, ScalePicture));
+  cardList.append(createCard(item.name, item.link, deleteCard, cardLike, scalePicture));
 })
 
 // Вешаю обработчик на кнопку "Закрыть" попапа
@@ -24,7 +24,7 @@ popupCloseButtons.forEach(function(button) {
 function addNewCard(event) {
   event.preventDefault();
 
-  cardList.prepend(createCard(cardNameInput.value, cardLinkInput.value, deleteCard, cardLike, ScalePicture))
+  cardList.prepend(createCard(cardNameInput.value, cardLinkInput.value, deleteCard, cardLike, scalePicture))
   closePopup(popupNewCard);
   formNewCard.reset();
 }
@@ -33,11 +33,11 @@ function addNewCard(event) {
 const popupImage = document.querySelector('.popup_type_image');
 const popupImagePicture = popupImage.querySelector('.popup__image');
 const popupTitle = popupImage.querySelector('.popup__caption')
-function ScalePicture (card) {
+function scalePicture (title, imageUrl) {
   openPopup(popupImage);
-  popupImagePicture.src = card.querySelector('.card__image').src;
-  popupImagePicture.alt = card.querySelector('.card__title').textContent;
-  popupTitle.textContent = card.querySelector('.card__title').textContent;
+  popupImagePicture.src = imageUrl;
+  popupImagePicture.alt = title;
+  popupTitle.textContent = title;
 }
 
 // Функционал модальных окон
@@ -69,14 +69,14 @@ formNewCard.addEventListener('submit', addNewCard);
 // Обработчики событий открытия попапов
 const popupEditProfileButton = document.querySelector('.profile__edit-button');
 const popupNewCardButton = document.querySelector('.profile__add-button');
+const popupName = popupEditProfile.querySelector('.popup__input_type_name');
+const popupDescription = popupEditProfile.querySelector('.popup__input_type_description');
 
 popupEditProfileButton.addEventListener('click', function() {
   openPopup(popupEditProfile)
-  const name = popupEditProfile.querySelector('.popup__input_type_name');
-  const description = popupEditProfile.querySelector('.popup__input_type_description');
 
-  name.value = document.querySelector('.profile__title').textContent;
-  description.value = document.querySelector('.profile__description').textContent;
+  popupName.value = document.querySelector('.profile__title').textContent;
+  popupDescription.value = document.querySelector('.profile__description').textContent;
   });
 
 popupNewCardButton.addEventListener('click', function() {
