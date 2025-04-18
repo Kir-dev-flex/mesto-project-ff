@@ -75,8 +75,8 @@ const popupDescription = popupEditProfile.querySelector('.popup__input_type_desc
 popupEditProfileButton.addEventListener('click', function() {
   openPopup(popupEditProfile)
 
-  popupName.value = document.querySelector('.profile__title').textContent;
-  popupDescription.value = document.querySelector('.profile__description').textContent;
+  popupName.value = profileName.textContent;
+  popupDescription.value = profileDescription.textContent;
   });
 
 popupNewCardButton.addEventListener('click', function() {
