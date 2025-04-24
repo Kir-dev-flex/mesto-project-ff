@@ -1,0 +1,10 @@
+.form__error {
+    color: red;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.form__error_is_visible {
+    opacity: 1;
+}
