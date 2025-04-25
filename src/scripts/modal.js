@@ -19,7 +19,6 @@ function closeButtonHandler() {
     if (openedPopup) {
         closePopup(openedPopup);
     }
-    
 }
 
 // Закрытие любого попапа по клику вне формы
@@ -36,13 +35,14 @@ function pressOverlayPopup(event) {
 
 function closePopup(popup) {
     popup.classList.remove('popup_is-opened');
-    const form = popup.querySelector('.popup__form');
-    if (form) {
-        form.reset();
-    }
+    
     // Удаляю все обработчики событий
     document.removeEventListener('keydown', pressEscape);
     popup.removeEventListener('click', pressOverlayPopup)
 }
 
-export { openPopup, closePopup, closeButtonHandler };
+function clearForm(form) {
+    form.reset()
+}
+
+export { openPopup, closePopup, closeButtonHandler, clearForm };

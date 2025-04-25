@@ -62,7 +62,8 @@ function clearValidation (form, config) {
     inputs.forEach((input) => {
         hideInputError(input, form, config);
     })
-    button.classList.add(config.inactiveButtonClass);   
+    button.classList.add(config.inactiveButtonClass);
+    button.disabled = true;
 }
 
 export { enableValidation, clearValidation }

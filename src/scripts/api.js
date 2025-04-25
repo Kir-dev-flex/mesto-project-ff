@@ -1,4 +1,7 @@
-let userId = "";
+const config = {
+    baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-36',
+    token: '32bfec9d-5953-4d12-afbb-e7f5f60e8235'
+}
 
 function handleResponse (res) {
     if (res.ok) {
@@ -9,38 +12,28 @@ function handleResponse (res) {
 }
 
 function getUserInfo() {
-    return fetch('https://mesto.nomoreparties.co/v1/wff-cohort-36/users/me', {
+    return fetch(`${config.baseUrl}/users/me`, {
         headers: {
-            authorization: '32bfec9d-5953-4d12-afbb-e7f5f60e8235'
+            authorization: config.token
         }
     })
-    .then((res) => handleResponse(res))
-    .then((res) => {
-        userId = res._id;
-        return res
-    })
-    .catch((err) => {
-        console.log(err);
-    }); 
+    .then(handleResponse)
 }
 
 function getInitialCards() {
-    return fetch('https://mesto.nomoreparties.co/v1/wff-cohort-36/cards', {
+    return fetch(`${config.baseUrl}/cards`, {
         headers: {
-            authorization: '32bfec9d-5953-4d12-afbb-e7f5f60e8235'
+            authorization: config.token
         }
     })
-    .then((res) => handleResponse(res))
-    .catch((err) => {
-        console.log(err);
-    }); 
+    .then(handleResponse) 
 }
 
 function saveUserInfo(name, about) {
-    return fetch('https://mesto.nomoreparties.co/v1/wff-cohort-36/users/me ', {
+    return fetch(`${config.baseUrl}/users/me`, {
         method: 'PATCH',
         headers: {
-            authorization: '32bfec9d-5953-4d12-afbb-e7f5f60e8235',
+            authorization: config.token,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -48,17 +41,14 @@ function saveUserInfo(name, about) {
             about: about
         })
     })
-    .then((res) => handleResponse(res))
-    .catch((err) => {
-        console.log(err);
-    }); 
+    .then(handleResponse)
 }
 
 function saveNewCard (name, link) {
-    return fetch('https://mesto.nomoreparties.co/v1/wff-cohort-36/cards', {
+    return fetch(`${config.baseUrl}/cards`, {
         method: 'POST',
         headers: {
-            authorization: '32bfec9d-5953-4d12-afbb-e7f5f60e8235',
+            authorization: config.token,
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -66,66 +56,51 @@ function saveNewCard (name, link) {
             link: link
         })
     })
-    .then((res) => handleResponse(res))
-    .catch((err) => {
-        console.log(err);
-    }); 
+    .then(handleResponse)
 }
 
 function removeCard (cardId) {
-    return fetch(`https://nomoreparties.co/v1/wff-cohort-36/cards/${cardId}`, {
+    return fetch(`${config.baseUrl}/cards/${cardId}`, {
         method: 'DELETE',
         headers: {
-            authorization: '32bfec9d-5953-4d12-afbb-e7f5f60e8235'
+            authorization: config.token
         }
     })
-    .then((res) => handleResponse(res))
-    .catch((err) => {
-        console.log(err);
-    }); 
+    .then(handleResponse)
 }
 
 function addLike (cardId) {
-    return fetch(`https://nomoreparties.co/v1/wff-cohort-36/cards/likes/${cardId}`, {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
         method: 'PUT',
         headers: {
-            authorization: '32bfec9d-5953-4d12-afbb-e7f5f60e8235',
+            authorization: config.token,
             }
         })
-        .then((res) => handleResponse(res))
-        .catch((err) => {
-            console.log(err);
-        }); 
+        .then(handleResponse)
     }
 
 function removeLike (cardId) {
-    return fetch(`https://nomoreparties.co/v1/wff-cohort-36/cards/likes/${cardId}`, {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
         method: 'DELETE',
         headers: {
-            authorization: '32bfec9d-5953-4d12-afbb-e7f5f60e8235',
+            authorization: config.token,
             }
         })
-    .then((res) => handleResponse(res))
-    .catch((err) => {
-        console.log(err);
-    }); 
+    .then(handleResponse)
 }
 
 function changeAvatar (avatarLink) {
-    return fetch('https://nomoreparties.co/v1/wff-cohort-36/users/me/avatar ', {
+    return fetch(`${config.baseUrl}/users/me/avatar`, {
         method: 'PATCH',
         headers: {
-            authorization: '32bfec9d-5953-4d12-afbb-e7f5f60e8235',
+            authorization: config.token,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             avatar: avatarLink
         })
     })
-    .then((res) => handleResponse(res))
-    .catch((err) => {
-        console.log(err);
-    }); 
+    .then(handleResponse)
 }
 
-export { getUserInfo, getInitialCards, saveUserInfo, saveNewCard, userId, removeCard, addLike, removeLike, changeAvatar };
+export { getUserInfo, getInitialCards, saveUserInfo, saveNewCard, removeCard, addLike, removeLike, changeAvatar };

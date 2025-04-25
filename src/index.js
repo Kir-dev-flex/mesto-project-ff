@@ -1,8 +1,8 @@
 import './pages/index.css'; // добавлю импорт главного файла стилей для вебпака
 import { createCard, cardList, cardLike } from './scripts/cards.js'; 
-import { openPopup, closePopup, closeButtonHandler } from './scripts/modal.js'; 
+import { openPopup, closePopup, closeButtonHandler, clearForm } from './scripts/modal.js'; 
 import { enableValidation, clearValidation } from './scripts/validation.js';
-import { getUserInfo, getInitialCards, saveUserInfo, saveNewCard, userId, removeCard, addLike, removeLike, changeAvatar } from './scripts/api.js';
+import { getUserInfo, getInitialCards, saveUserInfo, saveNewCard, removeCard, addLike, removeLike, changeAvatar } from './scripts/api.js';
 
 const formNewCard = document.querySelector('.popup__form[name=new-place]');
 const cardNameInput = formNewCard.querySelector('.popup__input_type_card-name');
@@ -10,6 +10,7 @@ const cardLinkInput = formNewCard.querySelector('.popup__input_type_url');
 const profileName = document.querySelector('.profile__title');
 const profileDescription = document.querySelector('.profile__description');
 const profileImage = document.querySelector('.profile__image');
+let userId = "";
 
 // Вывожу начальные карточки и инфу на страницу
 Promise.all([getUserInfo(), getInitialCards()])
@@ -17,6 +18,7 @@ Promise.all([getUserInfo(), getInitialCards()])
     profileName.textContent = userData.name;
     profileDescription.textContent = userData.about;
     profileImage.style.backgroundImage = `url(${userData.avatar})`;
+    userId = userData._id;
 
     initialCards.reverse(); // чтобы карточки отображались в порядке добавления, а не в обратном
     initialCards.forEach((item) => {
@@ -25,15 +27,15 @@ Promise.all([getUserInfo(), getInitialCards()])
         item.link, 
         item.likes, 
         (cardElement) => deleteCard(cardElement, item._id),
-        (cardElement) => changeLike(cardElement, item._id),
+        (cardElement) => changeLike(cardElement, item),
         scalePicture, 
         userId, 
         item.owner._id))
     });
   })
   .catch((err) => {
-    console.error('Ошибка при загрузке данных:', err);
-  });
+      console.log(err);
+  }); 
 
 // Вешаю обработчик на кнопку "Закрыть" попапа
 const popupCloseButtons = document.querySelectorAll('.popup__close');
@@ -53,12 +55,15 @@ function addNewCard(event) {
       res.link, 
       res.likes, 
       (cardElement) => deleteCard(cardElement, res._id), 
-      (cardElement) => changeLike(cardElement, res._id),
+      (cardElement) => changeLike(cardElement, res),
       scalePicture, 
       userId,
       res.owner._id))
     closePopup(popupNewCard);
     formNewCard.reset();
+  })
+  .catch((err) => {
+    console.log(err);
   })
   .finally(() => {
     saveButton.textContent = 'Сохранить';
@@ -71,16 +76,32 @@ function deleteCard(cardElement, cardId) {
     .then(() => {
       cardElement.remove();
     })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 // Функционал лайка карточки
-function changeLike(cardElement, cardId) {
+function changeLike(cardElement, card) {
   const cardLikeButton = cardElement.querySelector('.card__like-button')
+  const cardLikeNumber = cardElement.querySelector('.card__like-number')
   if (cardLikeButton.classList.contains('card__like-button_is-active')) {
-    removeLike(cardId)
+    removeLike(card._id)
+      .then((res) => {
+        cardLikeNumber.textContent = res.likes.length
+      })
+      .catch((err) => {
+          console.log(err);
+      }); 
     cardLike(cardElement)
   } else {
-    addLike(cardId)
+    addLike(card._id)
+      .then((res) => {
+        cardLikeNumber.textContent = res.likes.length
+      })
+      .catch((err) => {
+          console.log(err);
+      }); 
     cardLike(cardElement)
   }
 }
@@ -109,8 +130,7 @@ function editFormHandler(event) {
   const name = nameInput.value;
   const description = jobInput.value;
 
-  const saveButton = editForm.querySelector('.popup__button');
-  saveButton.textContent = 'Сохранение...';
+  event.submitter.textContent = 'Сохранение...';
 
   saveUserInfo(name, description)
     .then((res) => {
@@ -119,8 +139,11 @@ function editFormHandler(event) {
       closePopup(popupEditProfile);
       editForm.reset();
     })
+    .catch((err) => {
+      console.log(err);
+    })
     .finally(() => {
-      saveButton.textContent = 'Сохранить';
+      event.submitter.textContent = 'Сохранить';
     })
 }
 
@@ -129,6 +152,7 @@ const avatarForm = document.querySelector('.popup__form[name="edit-avatar"]');
 
 profileImage.addEventListener('click', function() {
   clearValidation(avatarForm, validationConfig);
+  clearForm(avatarForm);
   openPopup(avatarPopup);
 })
 
@@ -140,10 +164,13 @@ function handleAvatarForm(event) {
 
   const avatarUrl = document.querySelector('.popup__input_type_avatar').value;
   changeAvatar(avatarUrl)
-    .then((res) => {
+    .then(() => {
       profileImage.style.backgroundImage = `url(${avatarUrl})`;
-      closePopup(avatarPopup);
       avatarForm.reset();
+      closePopup(avatarPopup);
+    })
+    .catch((err) => {
+      console.log(err);
     })
     .finally(() => {
       saveButton.textContent = 'Сохранить';
@@ -169,6 +196,7 @@ popupEditProfileButton.addEventListener('click', function() {
 
 popupNewCardButton.addEventListener('click', function() {
   clearValidation(formNewCard, validationConfig);
+  clearForm(formNewCard)
   openPopup(popupNewCard)
 })
 

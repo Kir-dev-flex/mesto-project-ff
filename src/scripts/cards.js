@@ -37,10 +37,8 @@ function createCard (name, imageSource, cardLikes, deleteHandler, likeHandler, i
 // Лайк карточки
 function cardLike (card) {
   if (card.querySelector('.card__like-button').classList.contains('card__like-button_is-active')) {
-    card.querySelector('.card__like-number').textContent--;
     card.querySelector('.card__like-button').classList.toggle('card__like-button_is-active');
   } else {
-    card.querySelector('.card__like-number').textContent++;
     card.querySelector('.card__like-button').classList.toggle('card__like-button_is-active');
   }
 }
