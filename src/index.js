@@ -89,20 +89,20 @@ function changeLike(cardElement, card) {
     removeLike(card._id)
       .then((res) => {
         cardLikeNumber.textContent = res.likes.length
+        cardLike(cardElement)
       })
       .catch((err) => {
           console.log(err);
       }); 
-    cardLike(cardElement)
   } else {
     addLike(card._id)
       .then((res) => {
         cardLikeNumber.textContent = res.likes.length
+        cardLike(cardElement)
       })
       .catch((err) => {
           console.log(err);
       }); 
-    cardLike(cardElement)
   }
 }
 
